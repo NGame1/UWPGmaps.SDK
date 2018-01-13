@@ -111,6 +111,7 @@
     <Compile Include="Initializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReverseGeocodingHelper.cs" />
+    <Compile Include="SearchHelper.cs" />
     <EmbeddedResource Include="Properties\GoogleMapsSDKUWP.rd.xml" />
   </ItemGroup>
   <ItemGroup>
