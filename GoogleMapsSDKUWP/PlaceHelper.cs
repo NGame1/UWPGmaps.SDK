@@ -145,7 +145,7 @@ namespace GMapsUWP.Place
 
     }
 
-    class DetailsHelper
+    class PlaceDetailsHelper
     {
         /// <summary>
         /// Get a place details using place id
@@ -276,8 +276,12 @@ namespace GMapsUWP.Place
 
     }
 
-    class Add
-    {
+    class PlaceAddHelper
+    {/// <summary>
+    /// Add a missing place to Google Maps 
+    /// </summary>
+    /// <param name="PlaceInfo">Information about the place you want to add</param>
+    /// <returns>return status about the place you added</returns>
         public static async Task<Response> AddPlace(Rootobject PlaceInfo)
         {
             try
