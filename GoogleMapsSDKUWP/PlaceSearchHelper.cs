@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 
-namespace GMapsUWP.Search
+namespace GMapsUWP.Place.Search
 {
-    class SearchHelper
+    class PlaceSearchHelper
     {
         public enum SearchPriceEnum
         {
