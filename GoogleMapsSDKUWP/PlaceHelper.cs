@@ -284,10 +284,10 @@ namespace GMapsUWP.Place
 
     class PlaceAddHelper
     {/// <summary>
-    /// Add a missing place to Google Maps 
-    /// </summary>
-    /// <param name="PlaceInfo">Information about the place you want to add</param>
-    /// <returns>return status about the place you added</returns>
+     /// Add a missing place to Google Maps 
+     /// </summary>
+     /// <param name="PlaceInfo">Information about the place you want to add</param>
+     /// <returns>return status about the place you added</returns>
         public static async Task<Response> AddPlace(Rootobject PlaceInfo)
         {
             try
@@ -330,4 +330,37 @@ namespace GMapsUWP.Place
         }
 
     }
+
+    class PlaceDeleteHelper
+    {/// <summary>
+     /// Add a missing place to Google Maps 
+     /// </summary>
+     /// <param name="PlaceInfo">Information about the place you want to add</param>
+     /// <returns>return status about the place you added</returns>
+        public static async Task<Response> DeletePlace(Rootobject PlaceInfo)
+        {
+            try
+            {
+                var http = new HttpClient();
+                var r = await http.PostAsync($"https://maps.googleapis.com/maps/api/place/delete/json?key={Initializer.GoogleMapAPIKey}", new StringContent(JsonConvert.SerializeObject(PlaceInfo)));
+                return JsonConvert.DeserializeObject<Response>((await r.Content.ReadAsStringAsync()));
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public class Rootobject
+        {
+            public string place_id { get; set; }
+        }
+
+        public class Response
+        {
+            public string status { get; set; }
+        }
+
+    }
+
 }
