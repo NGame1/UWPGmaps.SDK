@@ -9,5 +9,7 @@ Geocoding and reverse-Geocoding
 
 Photo helper (Convert Photo references to URI)
 
-Place Helper (Add / Delete / TextSearch / Nearby Search)
+Place Helper (Add / Delete / TextSearch / Nearby Search / Place Auto Complete)
+
+Tile API Helper (Premium APIKey needed)
 
