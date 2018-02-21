@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using GMapsUWP.Photos;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,21 @@ namespace GMapsUWP.Place
 {
     class PlaceSearchHelper
     {
+        public enum PlaceTypesEnum
+        {
+            NOTMENTIONED,
+            accounting, airport, amusement_park, aquarium, art_gallery, atm, bakery, bank, bar, beauty_salon,
+            bicycle_store, book_store, bowling_alley, bus_station, cafe, campground, car_dealer, car_rental,
+            car_repair, car_wash, casino, cemetery, church, city_hall, clothing_store, convenience_store,
+            courthouse, dentist, department_store, doctor, electrician, electronics_store, embassy, fire_station,
+            florist, funeral_home, furniture_store, gas_station, gym, hair_care, hardware_store, hindu_temple,
+            home_goods_store, hospital, insurance_agency, jewelry_store, laundry, lawyer, library, liquor_store,
+            local_government_office, locksmith, lodging, meal_delivery, meal_takeaway, mosque, movie_rental,
+            movie_theater, moving_company, museum, night_club, painter, park, parking, pet_store, pharmacy,
+            physiotherapist, plumber, police, post_office, real_estate_agency, restaurant, roofing_contractor,
+            rv_park, school, shoe_store, shopping_mall, spa, stadium, storage, store, subway_station, supermarket,
+            synagogue, taxi_stand, train_station, transit_station, travel_agency, veterinary_care, zoo
+        }
         public enum SearchPriceEnum
         {
             MostAffordable = 0,
@@ -29,7 +45,7 @@ namespace GMapsUWP.Place
         /// <param name="MinPrice">Restricts results to only those places within the specified range. Valid values range between 0 (most affordable) to 4 (most expensive), inclusive.</param>
         /// <param name="MaxPrice">Restricts results to only those places within the specified range. Valid values range between 0 (most affordable) to 4 (most expensive), inclusive.</param>
         /// <returns>Search Result. LOL :D</returns>
-        public static async Task<Rootobject> NearbySearch(BasicGeoposition Location, int Radius, string Keyword = "", SearchPriceEnum MinPrice = SearchPriceEnum.NonSpecified, SearchPriceEnum MaxPrice = SearchPriceEnum.NonSpecified)
+        public static async Task<Rootobject> NearbySearch(BasicGeoposition Location, int Radius, string Keyword = "", SearchPriceEnum MinPrice = SearchPriceEnum.NonSpecified, SearchPriceEnum MaxPrice = SearchPriceEnum.NonSpecified, PlaceTypesEnum type = PlaceTypesEnum.NOTMENTIONED)
         {
             try
             {
@@ -39,7 +55,7 @@ namespace GMapsUWP.Place
                 }
                 string para = "";
                 para += $"location={Location.Latitude},{Location.Longitude}&radius={Radius}";
-                if (Keyword != "") para += $"&keyword={Keyword}"; if (MinPrice != SearchPriceEnum.NonSpecified) para += $"&minprice={(int)MinPrice}"; if (MaxPrice != SearchPriceEnum.NonSpecified) para += $"&maxprice={(int)MaxPrice}";
+                if (Keyword != "") para += $"&keyword={Keyword}"; if (MinPrice != SearchPriceEnum.NonSpecified) para += $"&minprice={(int)MinPrice}"; if (MaxPrice != SearchPriceEnum.NonSpecified) para += $"&maxprice={(int)MaxPrice}"; if (type != PlaceTypesEnum.NOTMENTIONED) para += $"&type={type.ToString()}";
                 para += $"&key={Initializer.GoogleMapAPIKey}&language={Initializer.GoogleMapRequestsLanguage}";
                 var http = new HttpClient();
                 var st = await http.GetStringAsync(new Uri("https://maps.googleapis.com/maps/api/place/nearbysearch/json?" + para, UriKind.RelativeOrAbsolute));
@@ -51,7 +67,7 @@ namespace GMapsUWP.Place
             }
         }
 
-        public static async Task<Rootobject> TextSearch(string query, Geopoint Location = null, int Radius = 0, string Region = "", string NextPageToken = "", SearchPriceEnum MinPrice = SearchPriceEnum.NonSpecified, SearchPriceEnum MaxPrice = SearchPriceEnum.NonSpecified)
+        public static async Task<Rootobject> TextSearch(string query, Geopoint Location = null, int Radius = 0, string Region = "", string NextPageToken = "", SearchPriceEnum MinPrice = SearchPriceEnum.NonSpecified, SearchPriceEnum MaxPrice = SearchPriceEnum.NonSpecified, PlaceTypesEnum type = PlaceTypesEnum.NOTMENTIONED)
         {
             try
             {
@@ -62,9 +78,9 @@ namespace GMapsUWP.Place
                 if (Location != null && Radius == 0) { throw new Exception("Location and radius values must having values"); }
                 string para = "";
                 para += $"query={query.Replace(" ", "+")}";
-                if (Location != null) para += $"location={Location.Position.Latitude},{Location.Position.Longitude}&radius={Radius}";
-                if (Region != "") para += $"&region={Region}"; if (MinPrice != SearchPriceEnum.NonSpecified) para += $"&minprice={(int)MinPrice}"; if (MaxPrice != SearchPriceEnum.NonSpecified) para += $"&maxprice={(int)MaxPrice}";
-                para += $"&key={Initializer.GoogleMapAPIKey}&language={Initializer.GoogleMapRequestsLanguage}";
+                if (Location != null) para += $"&location={Location.Position.Latitude},{Location.Position.Longitude}&radius={Radius}";
+                if (Region != "") para += $"&region={Region}"; if (MinPrice != SearchPriceEnum.NonSpecified) para += $"&minprice={(int)MinPrice}"; if (MaxPrice != SearchPriceEnum.NonSpecified) para += $"&maxprice={(int)MaxPrice}"; if (type != PlaceTypesEnum.NOTMENTIONED) para += $"&type={type.ToString()}";
+                para += $"&language={Initializer.GoogleMapRequestsLanguage}&key={Initializer.GoogleMapAPIKey}";
                 var http = new HttpClient();
                 var st = await http.GetStringAsync(new Uri("https://maps.googleapis.com/maps/api/place/textsearch/json?" + para, UriKind.RelativeOrAbsolute));
                 return JsonConvert.DeserializeObject<Rootobject>(st);
@@ -141,6 +157,7 @@ namespace GMapsUWP.Place
             public string[] html_attributions { get; set; }
             public string photo_reference { get; set; }
             public int width { get; set; }
+            public Uri PlaceThumbnail { get { return PhotosHelper.GetPhotoUri(photo_reference, 350, 350); } }
         }
 
     }
@@ -157,7 +174,7 @@ namespace GMapsUWP.Place
             try
             {
                 var http = new HttpClient();
-                var res = await http.GetStringAsync(new Uri($"https://maps.googleapis.com/maps/api/place/details/json?placeid={PlaceID}&key={AppCore.GoogleMapAPIKey}", UriKind.RelativeOrAbsolute));
+                var res = await http.GetStringAsync(new Uri($"https://maps.googleapis.com/maps/api/place/details/json?placeid={PlaceID}&key={Initializer.GoogleMapAPIKey}", UriKind.RelativeOrAbsolute));
                 return JsonConvert.DeserializeObject<Rootobject>(res);
             }
             catch
@@ -165,7 +182,19 @@ namespace GMapsUWP.Place
                 return null;
             }
         }
-
+        public static async Task<Rootobject> GetPlaceDetailsbyReference(string ReferenceID)
+        {
+            try
+            {
+                var http = new HttpClient();
+                var res = await http.GetStringAsync(new Uri($"https://maps.googleapis.com/maps/api/place/details/json?reference={ReferenceID}&key={Initializer.GoogleMapAPIKey}", UriKind.RelativeOrAbsolute));
+                return JsonConvert.DeserializeObject<Rootobject>(res);
+            }
+            catch
+            {
+                return null;
+            }
+        }
         public class Rootobject
         {
             public object[] html_attributions { get; set; }
@@ -266,6 +295,7 @@ namespace GMapsUWP.Place
             public string[] html_attributions { get; set; }
             public string photo_reference { get; set; }
             public int width { get; set; }
+            public Uri PhotoThumbnail { get { return PhotosHelper.GetPhotoUri(photo_reference, 350, 350); } }
         }
 
         public class Review
@@ -283,11 +313,12 @@ namespace GMapsUWP.Place
     }
 
     class PlaceAddHelper
-    {/// <summary>
-     /// Add a missing place to Google Maps 
-     /// </summary>
-     /// <param name="PlaceInfo">Information about the place you want to add</param>
-     /// <returns>return status about the place you added</returns>
+    {
+        /// <summary>
+        /// Add a missing place to Google Maps 
+        /// </summary>
+        /// <param name="PlaceInfo">Information about the place you want to add</param>
+        /// <returns>return status about the place you added</returns>
         public static async Task<Response> AddPlace(Rootobject PlaceInfo)
         {
             try
@@ -363,4 +394,67 @@ namespace GMapsUWP.Place
 
     }
 
+    class PlaceAutoComplete
+    {
+        public static async Task<Rootobject> GetAutoCompleteResults(string input, int radius = 0, Geopoint location = null)
+        {
+            try
+            {
+                var http = new HttpClient();
+                var para = $"input={input}&language={Initializer.GoogleMapRequestsLanguage}&key={Initializer.GoogleMapAPIKey}";
+                if (radius != 0) para += $"&radius={radius}"; if (location != null) para += $"&location={location.Position.Latitude},{location.Position.Longitude}";
+                var r = await http.GetStringAsync(new Uri($"https://maps.googleapis.com/maps/api/place/autocomplete/json?{para}"));
+
+                return JsonConvert.DeserializeObject<Rootobject>(r);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public class Rootobject
+        {
+            public Prediction[] predictions { get; set; }
+            public string status { get; set; }
+        }
+
+        public class Prediction
+        {
+            public string description { get; set; }
+            public string id { get; set; }
+            public Matched_Substrings[] matched_substrings { get; set; }
+            public string place_id { get; set; }
+            public string reference { get; set; }
+            public Structured_Formatting structured_formatting { get; set; }
+            public Term[] terms { get; set; }
+            public string[] types { get; set; }
+        }
+
+        public class Structured_Formatting
+        {
+            public string main_text { get; set; }
+            public Main_Text_Matched_Substrings[] main_text_matched_substrings { get; set; }
+            public string secondary_text { get; set; }
+        }
+
+        public class Main_Text_Matched_Substrings
+        {
+            public int length { get; set; }
+            public int offset { get; set; }
+        }
+
+        public class Matched_Substrings
+        {
+            public int length { get; set; }
+            public int offset { get; set; }
+        }
+
+        public class Term
+        {
+            public int offset { get; set; }
+            public string value { get; set; }
+        }
+
+    }
 }

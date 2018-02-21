@@ -9,13 +9,12 @@ using Windows.Devices.Geolocation;
 
 namespace GMapsUWP.GeoCoding
 {
-    class ReverseGeocodingHelper
-    {
-        /// <summary>
-        /// Get Location Latitude and Longitude from Address.
-        /// </summary>
-        /// <param name="Address">The address for reverse geocoding</param>
-        /// <returns>returns a geopoint contains address Latitude and Longitude</returns>
+    class ReverseGeoCode
+    {/// <summary>
+     /// Get Location Latitude and Longitude from Address
+     /// </summary>
+     /// <param name="Address">The address for reverse geocoding</param>
+     /// <returns>returns a geopoint contains address Latitude and Longitude</returns>
         public static async Task<Geopoint> GetLocation(string Address)
         {
             try
@@ -104,6 +103,3 @@ namespace GMapsUWP.GeoCoding
 
     }
 }
-
-}
-

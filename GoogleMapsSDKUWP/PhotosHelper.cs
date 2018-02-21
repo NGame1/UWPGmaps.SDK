@@ -22,6 +22,13 @@ namespace GMapsUWP.Photos
         {
             return new Uri($"https://maps.googleapis.com/maps/api/place/photo?key={Initializer.GoogleMapAPIKey}&photoreference={PhotoReference}&maxwidth={MaxWidth}&maxheight={MaxHeight}");
         }
+        /// <summary>
+        /// Get a photo from photo reference id
+        /// </summary>
+        /// <param name="PhotoReference">photo reference id get from Google Maps api</param>
+        /// <param name="MaxWidth">maximum width of the picture</param>
+        /// <param name="MaxHeight">maximum height of the picture</param>
+        /// <returns>photo as a BitmapImage class</returns>
         public static BitmapImage GetPhoto(string PhotoReference, int MaxWidth, int MaxHeight)
         {
             var uri = new Uri($"https://maps.googleapis.com/maps/api/place/photo?key={Initializer.GoogleMapAPIKey}&photoreference={PhotoReference}&maxwidth={MaxWidth}&maxheight={MaxHeight}");

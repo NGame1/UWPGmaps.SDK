@@ -9,7 +9,7 @@ using Windows.Devices.Geolocation;
 
 namespace GMapsUWP.GeoCoding
 {
-    public class GeocodingHelper
+    public class GeocodeHelper
     {
         /// <summary>
         /// Get Address of the GeoPoint you provided 
@@ -28,6 +28,26 @@ namespace GMapsUWP.GeoCoding
             catch { return "Earth :D"; }
         }
 
+        public static async Task<Rootobject> GetInfo(string PlaceID)
+        {
+            try
+            {
+                var http = new HttpClient();
+                var r = await http.GetStringAsync(new Uri($"https://maps.googleapis.com/maps/api/geocode/json?place_id={PlaceID}&language={Initializer.GoogleMapRequestsLanguage}&key={Initializer.GoogleMapAPIKey}", UriKind.RelativeOrAbsolute));
+                return JsonConvert.DeserializeObject<Rootobject>(r);
+            }
+            catch { return null; }
+        }
+        public static async Task<Rootobject> GetInfo(Geopoint cn)
+        {
+            try
+            {
+                var http = new HttpClient();
+                var r = await http.GetStringAsync(new Uri($"https://maps.googleapis.com/maps/api/geocode/json?latlng={cn.Position.Latitude},{cn.Position.Longitude}&language={Initializer.GoogleMapRequestsLanguage}&key={Initializer.GoogleMapAPIKey}", UriKind.RelativeOrAbsolute));
+                return JsonConvert.DeserializeObject<Rootobject>(r);
+            }
+            catch { return null; }
+        }
         public class Rootobject
         {
             public Result[] results { get; set; }
