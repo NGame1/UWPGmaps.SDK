@@ -14,4 +14,5 @@ Place Helper (Add / Delete / TextSearch / Nearby Search / Place Auto Complete)
 Tile API Helper (Premium APIKey needed)
 
 #Related Links : 
-SDK NuGet package : https://www.nuget.org/packages/GMapsUWPSDK
+
+(SDK NuGet package)[https://www.nuget.org/packages/GMapsUWPSDK]
