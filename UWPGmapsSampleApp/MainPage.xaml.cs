@@ -43,7 +43,7 @@ namespace UWPGmapsSampleApp
             Map.TileSources.Clear();
             string mapuri = "http://mt1.google.com/vt/lyrs=r&hl=x-local&z={zoomlevel}&x={x}&y={y}";
             Map.TileSources.Add(new MapTileSource(new HttpMapTileDataSource(mapuri)));
-            GMapsUWP.Initializer.Initialize("AIzaSyCS5gpejHZIpgK7StAfFCcTqZ8cQsuHVnw", "en-US");
+            GMapsUWP.Initializer.Initialize("Your_API_KEY_HERE", "en-US");
         }
 
         private async void MapControl_MapTapped(MapControl sender, MapInputEventArgs args)
