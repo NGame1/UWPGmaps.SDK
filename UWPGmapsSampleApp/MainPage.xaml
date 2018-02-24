@@ -17,13 +17,20 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <maps:MapControl MapTapped="MapControl_MapTapped" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"/>
+        <maps:MapControl x:Name="Map" MapTapped="MapControl_MapTapped" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"/>
         <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Button Grid.Row="0" Click="GeoCode_Click"/>
+            <Button Content="GeoCode (Get Address)" Grid.Row="0" Click="GeoCodeAddress_Click"/>
+            <Button Content="GeoCode (Get Info)" Grid.Row="1" Click="GeoCodeInfo_Click"/>
+            <Button Content="Get Directions" Grid.Row="2" Click="GetDirections_Click"/>
+            <Button Content="Reverse Geocoding" Grid.Row="3" Click="ReverseGeocoding_Click"/>
+            <TextBox x:Name="TextSearch" Header="TextSearch" Grid.Row="4" TextChanged="TextBox_TextChanged"/>
         </Grid>
     </Grid>
 </Page>

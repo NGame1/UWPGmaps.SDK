@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Maps;
@@ -23,24 +26,108 @@ namespace UWPGmapsSampleApp
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        Geopoint origin = null;
+        Geopoint Destination = null;
         public enum SampleMode
         {
-            GeoCode
+            GeoCodeAddress,
+            GeoCodeInfo,
+            Directions,
+            ReverseGeocoding
         }
         SampleMode CurrentSampleMode { get; set; }
         public MainPage()
         {
             this.InitializeComponent();
+            Map.Style = MapStyle.None;
+            Map.TileSources.Clear();
+            string mapuri = "http://mt1.google.com/vt/lyrs=r&hl=x-local&z={zoomlevel}&x={x}&y={y}";
+            Map.TileSources.Add(new MapTileSource(new HttpMapTileDataSource(mapuri)));
+            GMapsUWP.Initializer.Initialize("AIzaSyCS5gpejHZIpgK7StAfFCcTqZ8cQsuHVnw", "en-US");
         }
 
-        private void MapControl_MapTapped(MapControl sender, MapInputEventArgs args)
+        private async void MapControl_MapTapped(MapControl sender, MapInputEventArgs args)
         {
+            switch (CurrentSampleMode)
+            {
+                case SampleMode.GeoCodeAddress:
+                    var GeoCodeResult = await GMapsUWP.GeoCoding.GeocodeHelper.GetAddress(args.Location);
+                    await new MessageDialog(GeoCodeResult).ShowAsync();
+                    break;
+                case SampleMode.GeoCodeInfo:
+                    var GeoCodeInfoResult1 = await GMapsUWP.Place.PlaceSearchHelper.NearbySearch(args.Location.Position, 10);
+                    if (GeoCodeInfoResult1.Results.Any())
+                    {
+                        var GeoCodeInfoResult2 = await GMapsUWP.GeoCoding.GeocodeHelper.GetInfo(GeoCodeInfoResult1.Results.FirstOrDefault().PlaceId);
+                        if (GeoCodeInfoResult2.Results.Any())
+                        {
+                            var GeoCodeInfoResult3 = GeoCodeInfoResult2.Results.FirstOrDefault();
+                            await new MessageDialog($"{GeoCodeInfoResult3.FormattedAddress}\n{GeoCodeInfoResult3.Geometry.LocationType}\n{GeoCodeInfoResult3.types.FirstOrDefault()}").ShowAsync();
+                        }
+                    }
+                    break;
+                case SampleMode.Directions:
+                    if (origin == null)
+                    {
+                        origin = args.Location;
+                        return;
+                    }
+                    else if (Destination == null)
+                    {
+                        Destination = args.Location;
+                        var DirectionsResult1 = await GMapsUWP.Directions.DirectionsHelper.GetDirections(origin.Position, Destination.Position);
+                        var DirectionsResult1Polyline = GMapsUWP.Directions.DirectionsHelper.GetDirectionAsRoute(DirectionsResult1, Colors.SkyBlue);
+                        Map.MapElements.Add(DirectionsResult1Polyline);
+                        return;
+                    }
+                    break;
+                case SampleMode.ReverseGeocoding:
+                    var ReverseGeocoding1 = await GMapsUWP.GeoCoding.GeocodeHelper.GetAddress(args.Location);
+                    var ReverseGeocoding2 = await GMapsUWP.GeoCoding.ReverseGeoCode.GetLocation(ReverseGeocoding1);
+                    await new MessageDialog($"Latitude : {ReverseGeocoding2.Position.Latitude}\nLongitude : {ReverseGeocoding2.Position.Longitude}").ShowAsync();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private async void GeoCodeAddress_Click(object sender, RoutedEventArgs e)
+        {
+            CurrentSampleMode = SampleMode.GeoCodeAddress;
+            await new MessageDialog("Now click somewhere on map on a place, Road or anything else").ShowAsync();
 
         }
 
-        private void GeoCode_Click(object sender, RoutedEventArgs e)
+        private async void GeoCodeInfo_Click(object sender, RoutedEventArgs e)
         {
-            CurrentSampleMode = SampleMode.GeoCode;
+            CurrentSampleMode = SampleMode.GeoCodeInfo;
+            await new MessageDialog("Now click somewhere on map on a place").ShowAsync();
+        }
+
+        private async void GetDirections_Click(object sender, RoutedEventArgs e)
+        {
+            CurrentSampleMode = SampleMode.Directions;
+            await new MessageDialog("Now click 2 places on map").ShowAsync();
+        }
+
+        private async void ReverseGeocoding_Click(object sender, RoutedEventArgs e)
+        {
+            CurrentSampleMode = SampleMode.ReverseGeocoding;
+            await new MessageDialog("Now click somewhere on map on a place, Road or anything else").ShowAsync();
+        }
+
+        private async void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var txtbox = TextSearch;
+            if (txtbox.Text.Length > 3)
+            {
+                var res = await GMapsUWP.Place.PlaceSearchHelper.TextSearch(txtbox.Text);
+                if (res.Results.Any())
+                {
+                    var myres = res.Results.FirstOrDefault();
+                    await new MessageDialog($"{myres.Icon}\n{myres.Name}\n{myres.PlaceId}\n{myres.Types.FirstOrDefault()}").ShowAsync();
+                }
+            }
         }
     }
 }

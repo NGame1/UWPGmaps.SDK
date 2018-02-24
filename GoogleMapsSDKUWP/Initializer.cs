@@ -2,7 +2,7 @@
 
 namespace GMapsUWP
 {
-    class Initializer
+    public class Initializer
     {
         private static HttpClient _http;
         public static HttpClient httpclient
@@ -19,7 +19,7 @@ namespace GMapsUWP
         }
         public static string GoogleMapRequestsLanguage { get; private set; }
         public static string GoogleMapAPIKey { get; private set; }
-        static void Initialize(string GMapAPIKey, string APILanguage = "en-US")
+        public static void Initialize(string GMapAPIKey, string APILanguage = "en-US")
         {
             GoogleMapAPIKey = GMapAPIKey;
             GoogleMapRequestsLanguage = APILanguage;

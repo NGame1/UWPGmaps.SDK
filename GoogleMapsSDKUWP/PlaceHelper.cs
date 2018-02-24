@@ -191,7 +191,7 @@ namespace GMapsUWP.Place
 
     }
 
-    class PlaceDetailsHelper
+    public class PlaceDetailsHelper
     {
         /// <summary>
         /// Get a place details using place id
@@ -399,7 +399,7 @@ namespace GMapsUWP.Place
 
     }
 
-    class PlaceAddHelper
+    public class PlaceAddHelper
     {
         /// <summary>
         /// Add a missing place to Google Maps 
@@ -464,7 +464,7 @@ namespace GMapsUWP.Place
 
     }
 
-    class PlaceDeleteHelper
+    public class PlaceDeleteHelper
     {/// <summary>
      /// Add a missing place to Google Maps 
      /// </summary>
@@ -498,7 +498,7 @@ namespace GMapsUWP.Place
 
     }
 
-    class PlaceAutoComplete
+    public class PlaceAutoComplete
     {
         public static async Task<Rootobject> GetAutoCompleteResults(string input, int radius = 0, Geopoint location = null)
         {
