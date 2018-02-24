@@ -9,7 +9,7 @@ using Windows.Devices.Geolocation;
 
 namespace GMapsUWP.GeoCoding
 {
-    class ReverseGeoCode
+    public class ReverseGeoCode
     {/// <summary>
      /// Get Location Latitude and Longitude from Address
      /// </summary>

@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Web.Http;
 
-namespace GoogleMapsSDKUWP
+namespace GMapsUWP.TileAPI
 {
-    class TileApiHelper
+    public class TileApiHelper
     {
         /// <summary>
         /// An array of values representing the layer type(s) to be added to the map. 

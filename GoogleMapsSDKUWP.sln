@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2020
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleMapsSDKUWP", "GoogleMapsSDKUWP\GoogleMapsSDKUWP.csproj", "{DA119ACB-B399-4889-97A2-0CD0256FEB2F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UWPGmapsSampleApp", "UWPGmapsSampleApp\UWPGmapsSampleApp.csproj", "{86107EEE-4974-4E9D-B522-CB95B873E0A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,26 @@ Global
 		{DA119ACB-B399-4889-97A2-0CD0256FEB2F}.Release|x64.Build.0 = Release|x64
 		{DA119ACB-B399-4889-97A2-0CD0256FEB2F}.Release|x86.ActiveCfg = Release|x86
 		{DA119ACB-B399-4889-97A2-0CD0256FEB2F}.Release|x86.Build.0 = Release|x86
+		{86107EEE-4974-4E9D-B522-CB95B873E0A4}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{86107EEE-4974-4E9D-B522-CB95B873E0A4}.Debug|ARM.ActiveCfg = Debug|ARM
+		{86107EEE-4974-4E9D-B522-CB95B873E0A4}.Debug|ARM.Build.0 = Debug|ARM
+		{86107EEE-4974-4E9D-B522-CB95B873E0A4}.Debug|ARM.Deploy.0 = Debug|ARM
+		{86107EEE-4974-4E9D-B522-CB95B873E0A4}.Debug|x64.ActiveCfg = Debug|x64
+		{86107EEE-4974-4E9D-B522-CB95B873E0A4}.Debug|x64.Build.0 = Debug|x64
+		{86107EEE-4974-4E9D-B522-CB95B873E0A4}.Debug|x64.Deploy.0 = Debug|x64
+		{86107EEE-4974-4E9D-B522-CB95B873E0A4}.Debug|x86.ActiveCfg = Debug|x86
+		{86107EEE-4974-4E9D-B522-CB95B873E0A4}.Debug|x86.Build.0 = Debug|x86
+		{86107EEE-4974-4E9D-B522-CB95B873E0A4}.Debug|x86.Deploy.0 = Debug|x86
+		{86107EEE-4974-4E9D-B522-CB95B873E0A4}.Release|Any CPU.ActiveCfg = Release|x86
+		{86107EEE-4974-4E9D-B522-CB95B873E0A4}.Release|ARM.ActiveCfg = Release|ARM
+		{86107EEE-4974-4E9D-B522-CB95B873E0A4}.Release|ARM.Build.0 = Release|ARM
+		{86107EEE-4974-4E9D-B522-CB95B873E0A4}.Release|ARM.Deploy.0 = Release|ARM
+		{86107EEE-4974-4E9D-B522-CB95B873E0A4}.Release|x64.ActiveCfg = Release|x64
+		{86107EEE-4974-4E9D-B522-CB95B873E0A4}.Release|x64.Build.0 = Release|x64
+		{86107EEE-4974-4E9D-B522-CB95B873E0A4}.Release|x64.Deploy.0 = Release|x64
+		{86107EEE-4974-4E9D-B522-CB95B873E0A4}.Release|x86.ActiveCfg = Release|x86
+		{86107EEE-4974-4E9D-B522-CB95B873E0A4}.Release|x86.Build.0 = Release|x86
+		{86107EEE-4974-4E9D-B522-CB95B873E0A4}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -7,7 +7,7 @@ using Windows.Web.Http;
 
 namespace GMapsUWP.Place
 {
-    class PlaceSearchHelper
+    public class PlaceSearchHelper
     {
         public enum PlaceTypesEnum
         {

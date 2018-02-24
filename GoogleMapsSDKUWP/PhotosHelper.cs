@@ -9,7 +9,7 @@ using Windows.Storage.Streams;
 
 namespace GMapsUWP.Photos
 {
-    class PhotosHelper
+    public class PhotosHelper
     {
         /// <summary>
         /// Get a photo from photo reference id
