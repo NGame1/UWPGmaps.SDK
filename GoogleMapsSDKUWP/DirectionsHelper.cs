@@ -51,7 +51,7 @@ namespace GMapsUWP.Directions
                     }
                 }
                 //requestUrl += $"&key={AppCore.GoogleMapAPIKey}";
-                var http = new HttpClient();
+                var http = Initializer.httpclient;
                 var s = await http.GetStringAsync(new Uri(requestUrl, UriKind.RelativeOrAbsolute));
                 return JsonConvert.DeserializeObject<Rootobject>(s);
             }
@@ -68,7 +68,7 @@ namespace GMapsUWP.Directions
         public static MapPolyline GetDirectionAsRoute(Rootobject FuncResp, Color ResultColor)
         {
             var loclist = new List<BasicGeoposition>();
-            var points = DecodePolylinePoints(FuncResp.routes.FirstOrDefault().overview_polyline.points);
+            var points = DecodePolylinePoints(FuncResp.Routes.FirstOrDefault().OverviewPolyline.Points);
             foreach (var item in points)
             {
                 loclist.Add(item);
@@ -102,7 +102,7 @@ namespace GMapsUWP.Directions
         public static MapPolyline GetDirectionAsRoute(Route Route, Color ResultColor)
         {
             var loclist = new List<BasicGeoposition>();
-            var points = DecodePolylinePoints(Route.overview_polyline.points);
+            var points = DecodePolylinePoints(Route.OverviewPolyline.Points);
             foreach (var item in points)
             {
                 loclist.Add(item);
@@ -132,9 +132,9 @@ namespace GMapsUWP.Directions
         public static string GetDistance(Route Route)
         {
             var Distance = 0;
-            foreach (var item in Route.legs)
+            foreach (var item in Route.Legs)
             {
-                Distance += item.distance.value;
+                Distance += item.Distance.Value;
             }
             return $"{Distance} meters";
         }
@@ -142,9 +142,9 @@ namespace GMapsUWP.Directions
         public static string GetTotalEstimatedTime(Route Route)
         {
             var EstimatedTime = 0;
-            foreach (var item in Route.legs)
+            foreach (var item in Route.Legs)
             {
-                EstimatedTime += item.duration.value;
+                EstimatedTime += item.Duration.Value;
             }
             return $"{Convert.ToInt32((EstimatedTime / 60))} minutes";
         }
@@ -210,128 +210,182 @@ namespace GMapsUWP.Directions
 
         public class Rootobject
         {
-            public Geocoded_Waypoints[] geocoded_waypoints { get; set; }
-            public Route[] routes { get; set; }
-            public string status { get; set; }
+            [JsonProperty(PropertyName = "geocoded_waypoints")]
+            public Geocoded_Waypoints[] GeocodedWaypoints { get; set; }
+            [JsonProperty(PropertyName = "routes")]
+            public Route[] Routes { get; set; }
+            [JsonProperty(PropertyName = "status")]
+            public string Status { get; set; }
         }
 
         public class Geocoded_Waypoints
         {
-            public string geocoder_status { get; set; }
-            public string place_id { get; set; }
-            public string[] types { get; set; }
+            [JsonProperty(PropertyName = "geocoder_status")]
+            public string Geocoder_Status { get; set; }
+            [JsonProperty(PropertyName = "place_id")]
+            public string PlaceId { get; set; }
+            [JsonProperty(PropertyName = "types")]
+            public string[] Types { get; set; }
         }
 
         public class Route
         {
-            public Bounds bounds { get; set; }
-            public string copyrights { get; set; }
-            public Leg[] legs { get; set; }
-            public Overview_Polyline overview_polyline { get; set; }
-            public string summary { get; set; }
-            public string[] warnings { get; set; }
-            public object[] waypoint_order { get; set; }
+            [JsonProperty(PropertyName = "bounds")]
+            public Bounds Bounds { get; set; }
+            [JsonProperty(PropertyName = "copyrights")]
+            public string Copyrights { get; set; }
+            [JsonProperty(PropertyName = "legs")]
+            public Leg[] Legs { get; set; }
+            [JsonProperty(PropertyName = "overview_polyline")]
+            public Overview_Polyline OverviewPolyline { get; set; }
+            [JsonProperty(PropertyName = "summary")]
+            public string Summary { get; set; }
+            [JsonProperty(PropertyName = "warnings")]
+            public string[] Warnings { get; set; }
+            [JsonProperty(PropertyName = "waypoint_order")]
+            public object[] WaypointOrder { get; set; }
         }
 
         public class Bounds
         {
-            public Northeast northeast { get; set; }
-            public Southwest southwest { get; set; }
+            [JsonProperty(PropertyName = "northeast")]
+            public Northeast NorthEast { get; set; }
+            [JsonProperty(PropertyName = "southwest")]
+            public Southwest SouthWest { get; set; }
         }
 
         public class Northeast
         {
-            public float lat { get; set; }
-            public float lng { get; set; }
+            [JsonProperty(PropertyName = "lat")]
+            public float Latitude { get; set; }
+            [JsonProperty(PropertyName = "lng")]
+            public float Longitude { get; set; }
         }
 
         public class Southwest
         {
-            public float lat { get; set; }
-            public float lng { get; set; }
+            [JsonProperty(PropertyName = "lat")]
+            public float Latitude { get; set; }
+            [JsonProperty(PropertyName = "lng")]
+            public float Longitude { get; set; }
         }
 
         public class Overview_Polyline
         {
-            public string points { get; set; }
+            [JsonProperty(PropertyName = "points")]
+            public string Points { get; set; }
         }
 
         public class Leg
         {
-            public Distance distance { get; set; }
-            public Duration duration { get; set; }
-            public string end_address { get; set; }
-            public End_Location end_location { get; set; }
-            public string start_address { get; set; }
-            public Start_Location start_location { get; set; }
-            public Step[] steps { get; set; }
-            public object[] traffic_speed_entry { get; set; }
-            public object[] via_waypoint { get; set; }
+            [JsonProperty(PropertyName = "distance")]
+            public Distance Distance { get; set; }
+            [JsonProperty(PropertyName = "duration")]
+            public Duration Duration { get; set; }
+            [JsonProperty(PropertyName = "end_address")]
+            public string EndAddress { get; set; }
+            [JsonProperty(PropertyName = "end_location")]
+            public End_Location EndLocation { get; set; }
+            [JsonProperty(PropertyName = "start_address")]
+            public string StartAddress { get; set; }
+            [JsonProperty(PropertyName = "start_location")]
+            public Start_Location StartLocation { get; set; }
+            [JsonProperty(PropertyName = "steps")]
+            public Step[] Steps { get; set; }
+            [JsonProperty(PropertyName = "traffic_speed_entry")]
+            public object[] TrafficSpeedEntry { get; set; }
+            [JsonProperty(PropertyName = "via_waypoint")]
+            public object[] ViaWaypoint { get; set; }
         }
 
         public class Distance
         {
-            public string text { get; set; }
-            public int value { get; set; }
+            [JsonProperty(PropertyName = "text")]
+            public string Text { get; set; }
+            [JsonProperty(PropertyName = "value")]
+            public int Value { get; set; }
         }
 
         public class Duration
         {
-            public string text { get; set; }
-            public int value { get; set; }
+            [JsonProperty(PropertyName = "text")]
+            public string Text { get; set; }
+            [JsonProperty(PropertyName = "value")]
+            public int Value { get; set; }
         }
 
         public class End_Location
         {
-            public float lat { get; set; }
-            public float lng { get; set; }
+            [JsonProperty(PropertyName = "lat")]
+            public float Latitude { get; set; }
+            [JsonProperty(PropertyName = "lng")]
+            public float Longitude { get; set; }
         }
 
         public class Start_Location
         {
-            public float lat { get; set; }
-            public float lng { get; set; }
+            [JsonProperty(PropertyName = "lat")]
+            public float Latitude { get; set; }
+            [JsonProperty(PropertyName = "lng")]
+            public float Longitude { get; set; }
         }
 
         public class Step
         {
-            public Distance1 distance { get; set; }
-            public Duration1 duration { get; set; }
-            public End_Location1 end_location { get; set; }
-            public string html_instructions { get; set; }
-            public Polyline polyline { get; set; }
-            public Start_Location1 start_location { get; set; }
-            public string travel_mode { get; set; }
-            public string maneuver { get; set; }
+            [JsonProperty(PropertyName = "distance")]
+            public Distance1 Distance { get; set; }
+            [JsonProperty(PropertyName = "duration")]
+            public Duration1 DSuration { get; set; }
+            [JsonProperty(PropertyName = "end_location")]
+            public End_Location1 EndLocation { get; set; }
+            [JsonProperty(PropertyName = "html_instructions")]
+            public string HtmlInstructions { get; set; }
+            [JsonProperty(PropertyName = "polyline")]
+            public Polyline Polyline { get; set; }
+            [JsonProperty(PropertyName = "start_location")]
+            public Start_Location1 StartLocation { get; set; }
+            [JsonProperty(PropertyName = "travel_mode")]
+            public string TravelMode { get; set; }
+            [JsonProperty(PropertyName = "maneuver")]
+            public string Maneuver { get; set; }
         }
 
         public class Distance1
         {
-            public string text { get; set; }
-            public int value { get; set; }
+            [JsonProperty(PropertyName = "text")]
+            public string Text { get; set; }
+            [JsonProperty(PropertyName = "value")]
+            public int Value { get; set; }
         }
 
         public class Duration1
         {
-            public string text { get; set; }
-            public int value { get; set; }
+            [JsonProperty(PropertyName = "text")]
+            public string Text { get; set; }
+            [JsonProperty(PropertyName = "value")]
+            public int Value { get; set; }
         }
 
         public class End_Location1
         {
-            public float lat { get; set; }
-            public float lng { get; set; }
+            [JsonProperty(PropertyName = "lat")]
+            public float Latitude { get; set; }
+            [JsonProperty(PropertyName = "lng")]
+            public float Longitude { get; set; }
         }
 
         public class Polyline
         {
-            public string points { get; set; }
+            [JsonProperty(PropertyName = "points")]
+            public string Points { get; set; }
         }
 
         public class Start_Location1
         {
-            public float lat { get; set; }
-            public float lng { get; set; }
+            [JsonProperty(PropertyName = "lat")]
+            public float Latitude { get; set; }
+            [JsonProperty(PropertyName = "lng")]
+            public float Longitude { get; set; }
         }
 
     }

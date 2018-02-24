@@ -1,12 +1,9 @@
 ﻿using GMapsUWP.Photos;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
+using Windows.Web.Http;
 
 namespace GMapsUWP.Place
 {
@@ -57,7 +54,7 @@ namespace GMapsUWP.Place
                 para += $"location={Location.Latitude},{Location.Longitude}&radius={Radius}";
                 if (Keyword != "") para += $"&keyword={Keyword}"; if (MinPrice != SearchPriceEnum.NonSpecified) para += $"&minprice={(int)MinPrice}"; if (MaxPrice != SearchPriceEnum.NonSpecified) para += $"&maxprice={(int)MaxPrice}"; if (type != PlaceTypesEnum.NOTMENTIONED) para += $"&type={type.ToString()}";
                 para += $"&key={Initializer.GoogleMapAPIKey}&language={Initializer.GoogleMapRequestsLanguage}";
-                var http = new HttpClient();
+                var http = Initializer.httpclient;
                 var st = await http.GetStringAsync(new Uri("https://maps.googleapis.com/maps/api/place/nearbysearch/json?" + para, UriKind.RelativeOrAbsolute));
                 return JsonConvert.DeserializeObject<Rootobject>(st);
             }
@@ -81,7 +78,7 @@ namespace GMapsUWP.Place
                 if (Location != null) para += $"&location={Location.Position.Latitude},{Location.Position.Longitude}&radius={Radius}";
                 if (Region != "") para += $"&region={Region}"; if (MinPrice != SearchPriceEnum.NonSpecified) para += $"&minprice={(int)MinPrice}"; if (MaxPrice != SearchPriceEnum.NonSpecified) para += $"&maxprice={(int)MaxPrice}"; if (type != PlaceTypesEnum.NOTMENTIONED) para += $"&type={type.ToString()}";
                 para += $"&language={Initializer.GoogleMapRequestsLanguage}&key={Initializer.GoogleMapAPIKey}";
-                var http = new HttpClient();
+                var http = Initializer.httpclient;
                 var st = await http.GetStringAsync(new Uri("https://maps.googleapis.com/maps/api/place/textsearch/json?" + para, UriKind.RelativeOrAbsolute));
                 return JsonConvert.DeserializeObject<Rootobject>(st);
             }
@@ -93,71 +90,103 @@ namespace GMapsUWP.Place
 
         public class Rootobject
         {
-            public object[] html_attributions { get; set; }
-            public string next_page_token { get; set; }
-            public Result[] results { get; set; }
-            public string status { get; set; }
+            [JsonProperty(PropertyName = "html_attributions")]
+            public object[] HtmlAttributions { get; set; }
+            [JsonProperty(PropertyName = "next_page_token")]
+            public string NextPageToken { get; set; }
+            [JsonProperty(PropertyName = "results")]
+            public Result[] Results { get; set; }
+            [JsonProperty(PropertyName = "status")]
+            public string Status { get; set; }
         }
 
         public class Result
         {
-            public Geometry geometry { get; set; }
-            public string icon { get; set; }
-            public string id { get; set; }
-            public string name { get; set; }
-            public Photo[] photos { get; set; }
-            public string place_id { get; set; }
-            public string reference { get; set; }
-            public string scope { get; set; }
-            public string[] types { get; set; }
-            public string vicinity { get; set; }
-            public Opening_Hours opening_hours { get; set; }
-            public float rating { get; set; }
+            [JsonProperty(PropertyName = "geometry")]
+            public Geometry Geometry { get; set; }
+            [JsonProperty(PropertyName = "icon")]
+            public string Icon { get; set; }
+            [JsonProperty(PropertyName = "id")]
+            public string Id { get; set; }
+            [JsonProperty(PropertyName = "name")]
+            public string Name { get; set; }
+            [JsonProperty(PropertyName = "photos")]
+            public Photo[] Photos { get; set; }
+            [JsonProperty(PropertyName = "place_id")]
+            public string PlaceId { get; set; }
+            [JsonProperty(PropertyName = "reference")]
+            public string Reference { get; set; }
+            [JsonProperty(PropertyName = "scope")]
+            public string Scope { get; set; }
+            [JsonProperty(PropertyName = "types")]
+            public string[] Types { get; set; }
+            [JsonProperty(PropertyName = "vicinity")]
+            public string Vicinity { get; set; }
+            [JsonProperty(PropertyName = "opening_hours")]
+            public Opening_Hours OpeningHours { get; set; }
+            [JsonProperty(PropertyName = "rating")]
+            public float Rating { get; set; }
         }
 
         public class Geometry
         {
-            public Location location { get; set; }
-            public Viewport viewport { get; set; }
+            [JsonProperty(PropertyName = "location")]
+            public Location Location { get; set; }
+            [JsonProperty(PropertyName = "viewport")]
+            public Viewport Viewport { get; set; }
         }
 
         public class Location
         {
-            public float lat { get; set; }
-            public float lng { get; set; }
+            [JsonProperty(PropertyName = "lat")]
+            public float Latitude { get; set; }
+            [JsonProperty(PropertyName = "lng")]
+            public float Longitude { get; set; }
         }
 
         public class Viewport
         {
-            public Northeast northeast { get; set; }
-            public Southwest southwest { get; set; }
+            [JsonProperty(PropertyName = "northeast")]
+            public Northeast NorthEast { get; set; }
+            [JsonProperty(PropertyName = "southwest")]
+            public Southwest SouthWest { get; set; }
         }
 
         public class Northeast
         {
-            public float lat { get; set; }
-            public float lng { get; set; }
+            [JsonProperty(PropertyName = "lat")]
+            public float Latitude { get; set; }
+            [JsonProperty(PropertyName = "lng")]
+            public float Longitude { get; set; }
         }
 
         public class Southwest
         {
-            public float lat { get; set; }
-            public float lng { get; set; }
+            [JsonProperty(PropertyName = "lat")]
+            public float Latitude { get; set; }
+            [JsonProperty(PropertyName = "lng")]
+            public float Longitude { get; set; }
         }
 
         public class Opening_Hours
         {
-            public bool open_now { get; set; }
-            public object[] weekday_text { get; set; }
+            [JsonProperty(PropertyName = "open_now")]
+            public bool OpenNow { get; set; }
+            [JsonProperty(PropertyName = "weekday_text")]
+            public object[] WeekDayText { get; set; }
         }
 
         public class Photo
         {
-            public int height { get; set; }
-            public string[] html_attributions { get; set; }
-            public string photo_reference { get; set; }
-            public int width { get; set; }
-            public Uri PlaceThumbnail { get { return PhotosHelper.GetPhotoUri(photo_reference, 350, 350); } }
+            [JsonProperty(PropertyName = "height")]
+            public int Height { get; set; }
+            [JsonProperty(PropertyName = "html_attributions")]
+            public string[] HtmlAttributions { get; set; }
+            [JsonProperty(PropertyName = "photo_reference")]
+            public string PhotoReference { get; set; }
+            [JsonProperty(PropertyName = "width")]
+            public int Width { get; set; }
+            public Uri PlaceThumbnail { get { return PhotosHelper.GetPhotoUri(PhotoReference, 350, 350); } }
         }
 
     }
@@ -173,7 +202,7 @@ namespace GMapsUWP.Place
         {
             try
             {
-                var http = new HttpClient();
+                var http = Initializer.httpclient;
                 var res = await http.GetStringAsync(new Uri($"https://maps.googleapis.com/maps/api/place/details/json?placeid={PlaceID}&key={Initializer.GoogleMapAPIKey}", UriKind.RelativeOrAbsolute));
                 return JsonConvert.DeserializeObject<Rootobject>(res);
             }
@@ -186,7 +215,7 @@ namespace GMapsUWP.Place
         {
             try
             {
-                var http = new HttpClient();
+                var http = Initializer.httpclient;
                 var res = await http.GetStringAsync(new Uri($"https://maps.googleapis.com/maps/api/place/details/json?reference={ReferenceID}&key={Initializer.GoogleMapAPIKey}", UriKind.RelativeOrAbsolute));
                 return JsonConvert.DeserializeObject<Rootobject>(res);
             }
@@ -197,117 +226,175 @@ namespace GMapsUWP.Place
         }
         public class Rootobject
         {
-            public object[] html_attributions { get; set; }
-            public Result result { get; set; }
-            public string status { get; set; }
+            [JsonProperty(PropertyName = "html_attributions")]
+            public object[] HtmlAttributions { get; set; }
+            [JsonProperty(PropertyName = "result")]
+            public Result Result { get; set; }
+            [JsonProperty(PropertyName = "status")]
+            public string Status { get; set; }
         }
 
         public class Result
         {
-            public Address_Components[] address_components { get; set; }
-            public string adr_address { get; set; }
-            public string formatted_address { get; set; }
-            public string formatted_phone_number { get; set; }
-            public Geometry geometry { get; set; }
-            public string icon { get; set; }
-            public string id { get; set; }
-            public string international_phone_number { get; set; }
-            public string name { get; set; }
-            public Opening_Hours opening_hours { get; set; }
-            public Photo[] photos { get; set; }
-            public string place_id { get; set; }
-            public float rating { get; set; }
-            public string reference { get; set; }
-            public Review[] reviews { get; set; }
-            public string scope { get; set; }
-            public string[] types { get; set; }
-            public string url { get; set; }
-            public int utc_offset { get; set; }
-            public string vicinity { get; set; }
-            public string website { get; set; }
+            [JsonProperty(PropertyName = "address_components")]
+            public Address_Components[] AddressComponents { get; set; }
+            [JsonProperty(PropertyName = "adr_address")]
+            public string AdrAddress { get; set; }
+            [JsonProperty(PropertyName = "formatted_address")]
+            public string FormattedAddress { get; set; }
+            [JsonProperty(PropertyName = "formatted_phone_number")]
+            public string FormatedPhoneNumber { get; set; }
+            [JsonProperty(PropertyName = "geometry")]
+            public Geometry Geometry { get; set; }
+            [JsonProperty(PropertyName = "icon")]
+            public string Icon { get; set; }
+            [JsonProperty(PropertyName = "id")]
+            public string Id { get; set; }
+            [JsonProperty(PropertyName = "international_phone_number")]
+            public string InternationalPhoneNumber { get; set; }
+            [JsonProperty(PropertyName = "name")]
+            public string Name { get; set; }
+            [JsonProperty(PropertyName = "opening_hours")]
+            public Opening_Hours OpeningHours { get; set; }
+            [JsonProperty(PropertyName = "photos")]
+            public Photo[] Photos { get; set; }
+            [JsonProperty(PropertyName = "place_id")]
+            public string PlaceId { get; set; }
+            [JsonProperty(PropertyName = "rating")]
+            public float Rating { get; set; }
+            [JsonProperty(PropertyName = "reference")]
+            public string Reference { get; set; }
+            [JsonProperty(PropertyName = "reviews")]
+            public Review[] Reviews { get; set; }
+            [JsonProperty(PropertyName = "scope")]
+            public string Scope { get; set; }
+            [JsonProperty(PropertyName = "types")]
+            public string[] Types { get; set; }
+            [JsonProperty(PropertyName = "url")]
+            public string Url { get; set; }
+            [JsonProperty(PropertyName = "utc_offset")]
+            public int UtcOffset { get; set; }
+            [JsonProperty(PropertyName = "vicinity")]
+            public string Vicinity { get; set; }
+            [JsonProperty(PropertyName = "website")]
+            public string Website { get; set; }
         }
 
         public class Geometry
         {
-            public Location location { get; set; }
-            public Viewport viewport { get; set; }
+            [JsonProperty(PropertyName = "location")]
+            public Location Location { get; set; }
+            [JsonProperty(PropertyName = "viewport")]
+            public Viewport Viewport { get; set; }
         }
 
         public class Location
         {
-            public float lat { get; set; }
-            public float lng { get; set; }
+            [JsonProperty(PropertyName = "lat")]
+            public float Latitude { get; set; }
+            [JsonProperty(PropertyName = "lng")]
+            public float Longitude { get; set; }
         }
 
         public class Viewport
         {
-            public Northeast northeast { get; set; }
-            public Southwest southwest { get; set; }
+            [JsonProperty(PropertyName = "northeast")]
+            public Northeast NorthEast { get; set; }
+            [JsonProperty(PropertyName = "southwest")]
+            public Southwest SouthWest { get; set; }
         }
 
         public class Northeast
         {
-            public float lat { get; set; }
-            public float lng { get; set; }
+            [JsonProperty(PropertyName = "lat")]
+            public float Latitude { get; set; }
+            [JsonProperty(PropertyName = "lng")]
+            public float Longitude { get; set; }
         }
 
         public class Southwest
         {
-            public float lat { get; set; }
-            public float lng { get; set; }
+            [JsonProperty(PropertyName = "lat")]
+            public float Latitude { get; set; }
+            [JsonProperty(PropertyName = "lng")]
+            public float Longitude { get; set; }
         }
 
         public class Opening_Hours
         {
-            public bool open_now { get; set; }
-            public Period[] periods { get; set; }
-            public string[] weekday_text { get; set; }
+            [JsonProperty(PropertyName = "open_now")]
+            public bool OpenNow { get; set; }
+            [JsonProperty(PropertyName = "periods")]
+            public Period[] Periods { get; set; }
+            [JsonProperty(PropertyName = "weekday_text")]
+            public string[] WeekdayText { get; set; }
         }
 
         public class Period
         {
-            public Close close { get; set; }
-            public Open open { get; set; }
+            [JsonProperty(PropertyName = "close")]
+            public Close Close { get; set; }
+            [JsonProperty(PropertyName = "open")]
+            public Open Open { get; set; }
         }
 
         public class Close
         {
-            public int day { get; set; }
-            public string time { get; set; }
+            [JsonProperty(PropertyName = "day")]
+            public int Day { get; set; }
+            [JsonProperty(PropertyName = "time")]
+            public string Time { get; set; }
         }
 
         public class Open
         {
-            public int day { get; set; }
-            public string time { get; set; }
+            [JsonProperty(PropertyName = "day")]
+            public int Day { get; set; }
+            [JsonProperty(PropertyName = "time")]
+            public string Time { get; set; }
         }
 
         public class Address_Components
         {
-            public string long_name { get; set; }
-            public string short_name { get; set; }
-            public string[] types { get; set; }
+            [JsonProperty(PropertyName = "long_name")]
+            public string LongName { get; set; }
+            [JsonProperty(PropertyName = "short_name")]
+            public string ShortName { get; set; }
+            [JsonProperty(PropertyName = "types")]
+            public string[] Types { get; set; }
         }
 
         public class Photo
         {
-            public int height { get; set; }
-            public string[] html_attributions { get; set; }
-            public string photo_reference { get; set; }
-            public int width { get; set; }
-            public Uri PhotoThumbnail { get { return PhotosHelper.GetPhotoUri(photo_reference, 350, 350); } }
+            [JsonProperty(PropertyName = "height")]
+            public int Height { get; set; }
+            [JsonProperty(PropertyName = "html_attributions")]
+            public string[] HtmlAttributions { get; set; }
+            [JsonProperty(PropertyName = "photo_reference")]
+            public string PhotoReference { get; set; }
+            [JsonProperty(PropertyName = "width")]
+            public int Width { get; set; }
+            public Uri PhotoThumbnail { get { return PhotosHelper.GetPhotoUri(PhotoReference, 350, 350); } }
         }
 
         public class Review
         {
-            public string author_name { get; set; }
-            public string author_url { get; set; }
-            public string language { get; set; }
-            public string profile_photo_url { get; set; }
-            public int rating { get; set; }
-            public string relative_time_description { get; set; }
-            public string text { get; set; }
-            public int time { get; set; }
+            [JsonProperty(PropertyName = "author_name")]
+            public string AuthorName { get; set; }
+            [JsonProperty(PropertyName = "author_url")]
+            public string AuthorUrl { get; set; }
+            [JsonProperty(PropertyName = "language")]
+            public string Language { get; set; }
+            [JsonProperty(PropertyName = "profile_photo_url")]
+            public string ProfilePhotoUrl { get; set; }
+            [JsonProperty(PropertyName = "rating")]
+            public int Rating { get; set; }
+            [JsonProperty(PropertyName = "relative_time_description")]
+            public string RelativeTimeDescription { get; set; }
+            [JsonProperty(PropertyName = "text")]
+            public string Text { get; set; }
+            [JsonProperty(PropertyName = "time")]
+            public int Time { get; set; }
         }
 
     }
@@ -323,8 +410,8 @@ namespace GMapsUWP.Place
         {
             try
             {
-                var http = new HttpClient();
-                var r = await http.PostAsync($"https://maps.googleapis.com/maps/api/place/add/json?key={Initializer.GoogleMapAPIKey}", new StringContent(JsonConvert.SerializeObject(PlaceInfo)));
+                var http = Initializer.httpclient;
+                var r = await http.PostAsync(new Uri($"https://maps.googleapis.com/maps/api/place/add/json?key={Initializer.GoogleMapAPIKey}", UriKind.RelativeOrAbsolute), new HttpStringContent(JsonConvert.SerializeObject(PlaceInfo)));
                 return JsonConvert.DeserializeObject<Response>((await r.Content.ReadAsStringAsync()));
             }
             catch (Exception)
@@ -335,29 +422,44 @@ namespace GMapsUWP.Place
 
         public class Rootobject
         {
-            public Location location { get; set; }
-            public int accuracy { get; set; }
-            public string name { get; set; }
-            public string phone_number { get; set; }
-            public string address { get; set; }
-            public string[] types { get; set; }
-            public string website { get; set; }
-            public string language { get; set; }
+            [JsonProperty(PropertyName = "location")]
+            public Location Location { get; set; }
+            [JsonProperty(PropertyName = "accuracy")]
+            public int Accuracy { get; set; }
+            [JsonProperty(PropertyName = "name")]
+            public string Name { get; set; }
+            [JsonProperty(PropertyName = "phone_number")]
+            public string PhoneNumber { get; set; }
+            [JsonProperty(PropertyName = "address")]
+            public string Address { get; set; }
+            [JsonProperty(PropertyName = "types")]
+            public string[] Types { get; set; }
+            [JsonProperty(PropertyName = "website")]
+            public string Website { get; set; }
+            [JsonProperty(PropertyName = "language")]
+            public string Language { get; set; }
         }
 
         public class Location
         {
-            public float lat { get; set; }
-            public float lng { get; set; }
+            [JsonProperty(PropertyName = "lat")]
+            public float Latitude { get; set; }
+            [JsonProperty(PropertyName = "lng")]
+            public float Longitude { get; set; }
         }
 
         public class Response
         {
-            public string status { get; set; }
-            public string place_id { get; set; }
-            public string scope { get; set; }
-            public string reference { get; set; }
-            public string id { get; set; }
+            [JsonProperty(PropertyName = "status")]
+            public string Status { get; set; }
+            [JsonProperty(PropertyName = "place_id")]
+            public string PlaceId { get; set; }
+            [JsonProperty(PropertyName = "scope")]
+            public string Scope { get; set; }
+            [JsonProperty(PropertyName = "reference")]
+            public string Reference { get; set; }
+            [JsonProperty(PropertyName = "id")]
+            public string Id { get; set; }
         }
 
     }
@@ -372,8 +474,8 @@ namespace GMapsUWP.Place
         {
             try
             {
-                var http = new HttpClient();
-                var r = await http.PostAsync($"https://maps.googleapis.com/maps/api/place/delete/json?key={Initializer.GoogleMapAPIKey}", new StringContent(JsonConvert.SerializeObject(PlaceInfo)));
+                var http = Initializer.httpclient;
+                var r = await http.PostAsync(new Uri($"https://maps.googleapis.com/maps/api/place/delete/json?key={Initializer.GoogleMapAPIKey}", UriKind.RelativeOrAbsolute), new HttpStringContent(JsonConvert.SerializeObject(PlaceInfo)));
                 return JsonConvert.DeserializeObject<Response>((await r.Content.ReadAsStringAsync()));
             }
             catch (Exception)
@@ -384,12 +486,14 @@ namespace GMapsUWP.Place
 
         public class Rootobject
         {
-            public string place_id { get; set; }
+            [JsonProperty(PropertyName = "place_id")]
+            public string PlaceId { get; set; }
         }
 
         public class Response
         {
-            public string status { get; set; }
+            [JsonProperty(PropertyName = "status")]
+            public string Status { get; set; }
         }
 
     }
@@ -400,7 +504,7 @@ namespace GMapsUWP.Place
         {
             try
             {
-                var http = new HttpClient();
+                var http = Initializer.httpclient;
                 var para = $"input={input}&language={Initializer.GoogleMapRequestsLanguage}&key={Initializer.GoogleMapAPIKey}";
                 if (radius != 0) para += $"&radius={radius}"; if (location != null) para += $"&location={location.Position.Latitude},{location.Position.Longitude}";
                 var r = await http.GetStringAsync(new Uri($"https://maps.googleapis.com/maps/api/place/autocomplete/json?{para}"));
@@ -415,45 +519,64 @@ namespace GMapsUWP.Place
 
         public class Rootobject
         {
-            public Prediction[] predictions { get; set; }
-            public string status { get; set; }
+            [JsonProperty(PropertyName = "predictions")]
+            public Prediction[] Predictions { get; set; }
+            [JsonProperty(PropertyName = "status")]
+            public string Status { get; set; }
         }
 
         public class Prediction
         {
-            public string description { get; set; }
-            public string id { get; set; }
-            public Matched_Substrings[] matched_substrings { get; set; }
-            public string place_id { get; set; }
-            public string reference { get; set; }
-            public Structured_Formatting structured_formatting { get; set; }
-            public Term[] terms { get; set; }
-            public string[] types { get; set; }
+            [JsonProperty(PropertyName = "description")]
+            public string Description { get; set; }
+            [JsonProperty(PropertyName = "id")]
+            public string Id { get; set; }
+            [JsonProperty(PropertyName = "matched_substrings")]
+            public Matched_Substrings[] MatchedSubstrings { get; set; }
+            [JsonProperty(PropertyName = "place_id")]
+            public string PlaceId { get; set; }
+            [JsonProperty(PropertyName = "reference")]
+            public string Reference { get; set; }
+            [JsonProperty(PropertyName = "structured_formatting")]
+            public Structured_Formatting StructuredFormatting { get; set; }
+            [JsonProperty(PropertyName = "terms")]
+            public Term[] Terms { get; set; }
+            [JsonProperty(PropertyName = "types")]
+            public string[] Types { get; set; }
         }
 
         public class Structured_Formatting
         {
-            public string main_text { get; set; }
-            public Main_Text_Matched_Substrings[] main_text_matched_substrings { get; set; }
-            public string secondary_text { get; set; }
+            [JsonProperty(PropertyName = "main_text")]
+            public string MainTtext { get; set; }
+            [JsonProperty(PropertyName = "main_text_matched_substrings")]
+            public Main_Text_Matched_Substrings[] MainTextMatchedSubstrings { get; set; }
+            [JsonProperty(PropertyName = "secondary_text")]
+            public string SecondaryText { get; set; }
         }
 
         public class Main_Text_Matched_Substrings
         {
-            public int length { get; set; }
-            public int offset { get; set; }
+            [JsonProperty(PropertyName = "length")]
+            public int Length { get; set; }
+            [JsonProperty(PropertyName = "offset")]
+            public int Offset { get; set; }
         }
 
         public class Matched_Substrings
         {
-            public int length { get; set; }
-            public int offset { get; set; }
+            [JsonProperty(PropertyName = "length")]
+            public int Length { get; set; }
+            [JsonProperty(PropertyName = "offset")]
+            public int Offset { get; set; }
         }
 
         public class Term
         {
+            [JsonProperty(PropertyName = "offset")]
             public int offset { get; set; }
-            public string value { get; set; }
+            [JsonProperty(PropertyName = "value")]
+            public string Value { get; set; }
         }
 
     }

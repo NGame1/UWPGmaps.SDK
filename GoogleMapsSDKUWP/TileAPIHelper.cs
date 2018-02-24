@@ -43,29 +43,29 @@ namespace GoogleMapsSDKUWP
 
         public static async Task<ResponseClass> GetSessionToken(SessionTokenRequest Request)
         {
-            RequestClass req = new RequestClass() { mapType = Request.mapType.ToString(), region = Request.region, language = Initializer.GoogleMapRequestsLanguage };
-            req.highDpi = Request.highDpi;
-            if (Request.layerTypes != null && Request.layerTypes.Length > 0)
+            RequestClass req = new RequestClass() { mapType = Request.MapType.ToString(), region = Request.Region, language = Initializer.GoogleMapRequestsLanguage };
+            req.highDpi = Request.HighDpi;
+            if (Request.LayerTypes != null && Request.LayerTypes.Length > 0)
             {
-                foreach (var item in Request.layerTypes)
+                foreach (var item in Request.LayerTypes)
                 {
                     req.layerTypes.Add(item.ToString());
                 }
             }
-            req.overlay = Request.overlay;
+            req.overlay = Request.Overlay;
             if (Request.Scale != null) req.scale = Request.Scale.Value.ToString();
-            var http = new HttpClient();
+            var http = Initializer.httpclient;
             var resp = await http.PostAsync(new Uri($"https://www.googleapis.com/tile/v1/createSession?key={Initializer.GoogleMapAPIKey}", UriKind.RelativeOrAbsolute),
                 new HttpStringContent(JsonConvert.SerializeObject(req)));
             var res = JsonConvert.DeserializeObject<InternalResponse>(await resp.Content.ReadAsStringAsync());
             var t = DateTime.Now.AddSeconds(res.expiry);
             return new ResponseClass()
             {
-                expiry = t,
-                imageFormat = res.imageFormat,
-                session = res.session,
-                tileHeight = res.tileHeight,
-                tileWidth = res.tileWidth
+                Expiry = t,
+                ImageFormat = res.imageFormat,
+                Session = res.session,
+                TileHeight = res.tileHeight,
+                TileWidth = res.tileWidth
             };
         }
 
@@ -79,27 +79,33 @@ namespace GoogleMapsSDKUWP
             /// <summary>
             /// Reuired : The type of base map.
             /// </summary>
-            public mapType mapType { get; set; }
+            [JsonProperty(PropertyName = "mapType")]
+            public mapType MapType { get; set; }
             /// <summary>
             /// Reuired : A CLDR region identifier representing the physical location of the user to whom we are showing these tiles. e.g. fr.
             /// </summary>
-            public string region { get; set; }
+            [JsonProperty(PropertyName = "region")]
+            public string Region { get; set; }
             /// <summary>
             ///  Scales up the size of map elements, such as road labels, while retaining the tile size and coverage area of the default tile. Increasing the scale will also reduce the number of labels on the map, to reduce clutter.
             /// </summary>
+            [JsonProperty(PropertyName = "Scale")]
             public Scale? Scale { get; set; }
             /// <summary>
             /// An array of values representing the layer type(s) to be added to the map.
             /// </summary>
-            public LayerTypes[] layerTypes { get; set; }
+            [JsonProperty(PropertyName = "layerTypes")]
+            public LayerTypes[] LayerTypes { get; set; }
             /// <summary>
             /// A boolean value defining whether specified layerTypes should be rendered as a separate overlay, or combined with the base imagery. When true, the base map is not displayed.
             /// </summary>
-            public bool overlay { get; set; }
+            [JsonProperty(PropertyName = "overlay")]
+            public bool Overlay { get; set; }
             /// <summary>
             /// Specifies whether to return high DPI tiles. If true, the number of pixels in each of the x and y dimensions are multiplied by the scale factor value (ie. 2x or 4x), while the coverage area of the tile is unchanged. This parameter only works with scale values of 2x or 4x; it has no effect on 1x scale tiles.
             /// </summary>
-            public bool highDpi { get; set; }
+            [JsonProperty(PropertyName = "highDpi")]
+            public bool HighDpi { get; set; }
         }
         private class RequestClass
         {
@@ -121,11 +127,11 @@ namespace GoogleMapsSDKUWP
         }
         public class ResponseClass
         {
-            public string session { get; set; }
-            public DateTime expiry { get; set; }
-            public int tileWidth { get; set; }
-            public int tileHeight { get; set; }
-            public string imageFormat { get; set; }
+            public string Session { get; set; }
+            public DateTime Expiry { get; set; }
+            public int TileWidth { get; set; }
+            public int TileHeight { get; set; }
+            public string ImageFormat { get; set; }
         }
     }
 }

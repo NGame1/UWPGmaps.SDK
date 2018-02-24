@@ -19,10 +19,10 @@ namespace GMapsUWP.GeoCoding
         {
             try
             {
-                var http = new HttpClient();
+                var http = Initializer.httpclient;
                 var r = await http.GetStringAsync(new Uri($"http://maps.googleapis.com/maps/api/geocode/json?address={Address}&sensor=false", UriKind.RelativeOrAbsolute));
-                var res = JsonConvert.DeserializeObject<Rootobject>(r).results.FirstOrDefault().geometry.location;
-                return new Geopoint(new BasicGeoposition() { Latitude = res.lat, Longitude = res.lng });
+                var res = JsonConvert.DeserializeObject<Rootobject>(r).Results.FirstOrDefault().Geometry.Location;
+                return new Geopoint(new BasicGeoposition() { Latitude = res.Latitude, Longitude = res.Longitude });
             }
             catch { return null; }
         }
@@ -30,75 +30,104 @@ namespace GMapsUWP.GeoCoding
 
         public class Rootobject
         {
-            public Result[] results { get; set; }
-            public string status { get; set; }
+            [JsonProperty(PropertyName = "results")]
+            public Result[] Results { get; set; }
+            [JsonProperty(PropertyName = "status")]
+            public string Status { get; set; }
         }
 
         public class Result
         {
-            public Address_Components[] address_components { get; set; }
-            public string formatted_address { get; set; }
-            public Geometry geometry { get; set; }
-            public bool partial_match { get; set; }
-            public string place_id { get; set; }
-            public string[] types { get; set; }
+            [JsonProperty(PropertyName = "address_components")]
+            public Address_Components[] AddressCSomponents { get; set; }
+            [JsonProperty(PropertyName = "formatted_address")]
+            public string FormattedAddress { get; set; }
+            [JsonProperty(PropertyName = "geometry")]
+            public Geometry Geometry { get; set; }
+            [JsonProperty(PropertyName = "partial_match")]
+            public bool partialMatch { get; set; }
+            [JsonProperty(PropertyName = "place_id")]
+            public string PlaceId { get; set; }
+            [JsonProperty(PropertyName = "types")]
+            public string[] Types { get; set; }
         }
 
         public class Geometry
         {
-            public Location location { get; set; }
-            public string location_type { get; set; }
-            public Viewport viewport { get; set; }
-            public Bounds bounds { get; set; }
+            [JsonProperty(PropertyName = "location")]
+            public Location Location { get; set; }
+            [JsonProperty(PropertyName = "location_type")]
+            public string LocationType { get; set; }
+            [JsonProperty(PropertyName = "viewport")]
+            public Viewport Viewport { get; set; }
+            [JsonProperty(PropertyName = "bounds")]
+            public Bounds Bounds { get; set; }
         }
 
         public class Location
         {
-            public float lat { get; set; }
-            public float lng { get; set; }
+            [JsonProperty(PropertyName = "lat")]
+            public float Latitude { get; set; }
+            [JsonProperty(PropertyName = "lng")]
+            public float Longitude { get; set; }
         }
 
         public class Viewport
         {
-            public Northeast northeast { get; set; }
-            public Southwest southwest { get; set; }
+            [JsonProperty(PropertyName = "northeast")]
+            public Northeast NorthEast { get; set; }
+            [JsonProperty(PropertyName = "southwest")]
+            public Southwest SouthWest { get; set; }
         }
 
         public class Northeast
         {
-            public float lat { get; set; }
-            public float lng { get; set; }
+            [JsonProperty(PropertyName = "lat")]
+            public float Latitude { get; set; }
+            [JsonProperty(PropertyName = "lng")]
+            public float Longitude { get; set; }
         }
 
         public class Southwest
         {
-            public float lat { get; set; }
-            public float lng { get; set; }
+            [JsonProperty(PropertyName = "lat")]
+            public float Latitude { get; set; }
+            [JsonProperty(PropertyName = "lng")]
+            public float Longitude { get; set; }
         }
 
         public class Bounds
         {
-            public Northeast1 northeast { get; set; }
-            public Southwest1 southwest { get; set; }
+            [JsonProperty(PropertyName = "northeast")]
+            public Northeast1 NorthEast { get; set; }
+            [JsonProperty(PropertyName = "southwest")]
+            public Southwest1 SouthWest { get; set; }
         }
 
         public class Northeast1
         {
-            public float lat { get; set; }
-            public float lng { get; set; }
+            [JsonProperty(PropertyName = "lat")]
+            public float Latitude { get; set; }
+            [JsonProperty(PropertyName = "lng")]
+            public float Longitude { get; set; }
         }
 
         public class Southwest1
         {
-            public float lat { get; set; }
-            public float lng { get; set; }
+            [JsonProperty(PropertyName = "lat")]
+            public float Latitude { get; set; }
+            [JsonProperty(PropertyName = "lng")]
+            public float Longitude { get; set; }
         }
 
         public class Address_Components
         {
-            public string long_name { get; set; }
-            public string short_name { get; set; }
-            public string[] types { get; set; }
+            [JsonProperty(PropertyName = "long_name")]
+            public string LongName { get; set; }
+            [JsonProperty(PropertyName = "short_name")]
+            public string ShortName { get; set; }
+            [JsonProperty(PropertyName = "types")]
+            public string[] Types { get; set; }
         }
 
     }
