@@ -28,9 +28,11 @@ OK Now you have Address of the mentioned place.
 
 Let's get Directions between two points and show it on map : 
 
-`var Directions = await GMapsUWP.Directions.DirectionsHelper.GetDirections(origin_BasicGeoposition, Destination_BasicGeoposition);
-var DirectionsPolyline = GMapsUWP.Directions.DirectionsHelper.GetDirectionAsRoute(Directions, Color_Of_Result_PolyLine);
-Map.MapElements.Add(DirectionsPolyline);`
+`var Directions = await GMapsUWP.Directions.DirectionsHelper.GetDirections(origin_BasicGeoposition, Destination_BasicGeoposition);`
+
+`var DirectionsPolyline = GMapsUWP.Directions.DirectionsHelper.GetDirectionAsRoute(Directions, Color_Of_Result_PolyLine);`
+
+`Map.MapElements.Add(DirectionsPolyline);`
 
 In this code Map is an instance of MapControl. 
 
