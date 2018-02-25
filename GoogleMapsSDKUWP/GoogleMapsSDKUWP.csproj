@@ -107,6 +107,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DirectionsHelper.cs" />
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="GeocodingHelper.cs" />
     <Compile Include="Initializer.cs" />
     <Compile Include="PhotosHelper.cs" />
