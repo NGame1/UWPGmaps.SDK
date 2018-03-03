@@ -110,6 +110,7 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="GeocodingHelper.cs" />
     <Compile Include="Initializer.cs" />
+    <Compile Include="OfflineMapDownloader.cs" />
     <Compile Include="PhotosHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReverseGeocodingHelper.cs" />
