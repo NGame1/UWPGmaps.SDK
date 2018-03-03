@@ -3,6 +3,8 @@
 Unofficial Google Map SDK for Universal Windows Platform (UWP) 
 
 # What is supported 
+Offline Maps Downloading
+
 Finding routes and directions
 
 Geocoding and reverse-Geocoding
