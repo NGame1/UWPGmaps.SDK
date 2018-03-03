@@ -172,6 +172,7 @@ namespace GMapsUWP.OfflineMapsDownloader
                 http.DefaultRequestHeaders.Accept.ParseAdd("text/html, application/xhtml+xml, image/jxr, */*");
                 http.DefaultRequestHeaders.AcceptLanguage.ParseAdd("en-US,en;q=0.7,fa;q=0.3");
                 http.DefaultRequestHeaders.Cookie.ParseAdd($"IP_JAR={DateTime.Now.Year}-{DateTime.Now.Month}-{DateTime.Now.Day}-21");
+                http.DefaultRequestHeaders.UserAgent.ParseAdd("MahStudioGmapsSDK4UWP");
                 var res = await http.GetAsync(url);
                 var buffer = await res.Content.ReadAsBufferAsync();
                 if (buffer.Length == 0) throw new Exception();
@@ -191,10 +192,10 @@ namespace GMapsUWP.OfflineMapsDownloader
         /// <summary>
         /// Download map of a region you mention. We get two points at top left and bottom right
         /// </summary>
-        /// <param name="lat_bgn"></param>
-        /// <param name="lng_bgn"></param>
-        /// <param name="lat_end"></param>
-        /// <param name="lng_end"></param>
+        /// <param name="lat_bgn">Latitude of top left point region</param>
+        /// <param name="lng_bgn">Longitude of top left point region</param>
+        /// <param name="lat_end">Latitude of bottom right point region</param>
+        /// <param name="lng_end">Longitude of bottom right point region</param>
         /// <param name="MaxZoomLevel">Maximum zoom level to download tiles. Default value is 17</param>
         public async void DownloadMap(double lat_bgn, double lng_bgn, double lat_end, double lng_end, int MaxZoomLevel = 17)
         {

@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
 using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -33,8 +34,10 @@ namespace UWPGmapsSampleApp
             GeoCodeAddress,
             GeoCodeInfo,
             Directions,
-            ReverseGeocoding
+            ReverseGeocoding,
+            OfflineMapDL
         }
+        GMapsUWP.OfflineMapsDownloader.OfflineMapDownloader OfflineDL;
         SampleMode CurrentSampleMode { get; set; }
         public MainPage()
         {
@@ -44,6 +47,14 @@ namespace UWPGmapsSampleApp
             string mapuri = "http://mt1.google.com/vt/lyrs=r&hl=x-local&z={zoomlevel}&x={x}&y={y}";
             Map.TileSources.Add(new MapTileSource(new HttpMapTileDataSource(mapuri)));
             GMapsUWP.Initializer.Initialize("Your_API_KEY_HERE", "en-US");
+            OfflineDL = GMapsUWP.OfflineMapsDownloader.OfflineMapDownloader.GetInstance();
+            OfflineDL.DownloadCompleted += OfflineDL_DownloadCompleted;
+        }
+
+        private async void OfflineDL_DownloadCompleted(object sender, bool e)
+        {
+            var f = OfflineDL.GetMapDownloadFolder();
+            await Launcher.LaunchFolderAsync(f);
         }
 
         private async void MapControl_MapTapped(MapControl sender, MapInputEventArgs args)
@@ -86,6 +97,20 @@ namespace UWPGmapsSampleApp
                     var ReverseGeocoding2 = await GMapsUWP.GeoCoding.ReverseGeoCode.GetLocation(ReverseGeocoding1);
                     await new MessageDialog($"Latitude : {ReverseGeocoding2.Position.Latitude}\nLongitude : {ReverseGeocoding2.Position.Longitude}").ShowAsync();
                     break;
+                case SampleMode.OfflineMapDL:
+                    if (origin == null)
+                    {
+                        origin = args.Location;
+                        return;
+                    }
+                    else if (Destination == null)
+                    {
+                        Destination = args.Location;
+                        //Here I used Max Zoom Level to 2 to download complete faster. I prefer to use default value (17) or at least 15.
+                        OfflineDL.DownloadMap(origin.Position.Latitude, origin.Position.Longitude, Destination.Position.Latitude, Destination.Position.Longitude, 2);
+                        return;
+                    }
+                    break;
                 default:
                     break;
             }
@@ -107,6 +132,8 @@ namespace UWPGmapsSampleApp
         private async void GetDirections_Click(object sender, RoutedEventArgs e)
         {
             CurrentSampleMode = SampleMode.Directions;
+            origin = null;
+            Destination = null;
             await new MessageDialog("Now click 2 places on map").ShowAsync();
         }
 
@@ -128,6 +155,14 @@ namespace UWPGmapsSampleApp
                     await new MessageDialog($"{myres.Icon}\n{myres.Name}\n{myres.PlaceId}\n{myres.Types.FirstOrDefault()}").ShowAsync();
                 }
             }
+        }
+
+        private async void OfflineMapDL_Click(object sender, RoutedEventArgs e)
+        {
+            CurrentSampleMode = SampleMode.OfflineMapDL;
+            origin = null;
+            Destination = null;
+            await new MessageDialog("Now click 2 places on map. First at top left, Second at bottom right.").ShowAsync();
         }
     }
 }

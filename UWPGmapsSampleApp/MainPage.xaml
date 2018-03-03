@@ -25,12 +25,14 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Button Content="GeoCode (Get Address)" Grid.Row="0" Click="GeoCodeAddress_Click"/>
             <Button Content="GeoCode (Get Info)" Grid.Row="1" Click="GeoCodeInfo_Click"/>
             <Button Content="Get Directions" Grid.Row="2" Click="GetDirections_Click"/>
             <Button Content="Reverse Geocoding" Grid.Row="3" Click="ReverseGeocoding_Click"/>
             <TextBox x:Name="TextSearch" Header="TextSearch" Grid.Row="4" TextChanged="TextBox_TextChanged"/>
+            <Button Content="Offline Map Download" Grid.Row="5" Click="OfflineMapDL_Click"/>
         </Grid>
     </Grid>
 </Page>
