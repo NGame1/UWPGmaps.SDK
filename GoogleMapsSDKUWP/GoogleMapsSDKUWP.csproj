@@ -11,7 +11,7 @@
     <AssemblyName>GMapsUWP</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.14393.0</TargetPlatformVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.16299.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -110,6 +110,7 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="GeocodingHelper.cs" />
     <Compile Include="Initializer.cs" />
+    <Compile Include="MapControlHelper.cs" />
     <Compile Include="OfflineMapDownloader.cs" />
     <Compile Include="PhotosHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

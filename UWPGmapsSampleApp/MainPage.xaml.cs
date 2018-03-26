@@ -43,9 +43,10 @@ namespace UWPGmapsSampleApp
         {
             this.InitializeComponent();
             Map.Style = MapStyle.None;
-            Map.TileSources.Clear();
-            string mapuri = "http://mt1.google.com/vt/lyrs=r&hl=x-local&z={zoomlevel}&x={x}&y={y}";
-            Map.TileSources.Add(new MapTileSource(new HttpMapTileDataSource(mapuri)));
+            GMapsUWP.Map.MapControlHelper.UseGoogleMaps(Map);
+            //Map.TileSources.Clear();
+            //string mapuri = "http://mt1.google.com/vt/lyrs=r&hl=x-local&z={zoomlevel}&x={x}&y={y}";
+            //Map.TileSources.Add(new MapTileSource(new HttpMapTileDataSource(mapuri)));
             GMapsUWP.Initializer.Initialize("Your_API_KEY_HERE", "en-US");
             OfflineDL = GMapsUWP.OfflineMapsDownloader.OfflineMapDownloader.GetInstance();
             OfflineDL.DownloadCompleted += OfflineDL_DownloadCompleted;
