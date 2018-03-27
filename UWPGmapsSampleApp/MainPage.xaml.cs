@@ -42,7 +42,6 @@ namespace UWPGmapsSampleApp
         public MainPage()
         {
             this.InitializeComponent();
-            Map.Style = MapStyle.None;
             GMapsUWP.Map.MapControlHelper.UseGoogleMaps(Map);
             //Map.TileSources.Clear();
             //string mapuri = "http://mt1.google.com/vt/lyrs=r&hl=x-local&z={zoomlevel}&x={x}&y={y}";
