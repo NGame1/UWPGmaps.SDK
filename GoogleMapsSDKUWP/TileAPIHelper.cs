@@ -55,18 +55,20 @@ namespace GMapsUWP.TileAPI
             req.overlay = Request.Overlay;
             if (Request.Scale != null) req.scale = Request.Scale.Value.ToString();
             var http = Initializer.httpclient;
-            var resp = await http.PostAsync(new Uri($"https://www.googleapis.com/tile/v1/createSession?key={Initializer.GoogleMapAPIKey}", UriKind.RelativeOrAbsolute),
-                new HttpStringContent(JsonConvert.SerializeObject(req)));
-            var res = JsonConvert.DeserializeObject<InternalResponse>(await resp.Content.ReadAsStringAsync());
-            var t = DateTime.Now.AddSeconds(res.expiry);
-            return new ResponseClass()
+            using (var resp = await http.PostAsync(new Uri($"https://www.googleapis.com/tile/v1/createSession?key={Initializer.GoogleMapAPIKey}", UriKind.RelativeOrAbsolute),
+                new HttpStringContent(JsonConvert.SerializeObject(req))))
             {
-                Expiry = t,
-                ImageFormat = res.imageFormat,
-                Session = res.session,
-                TileHeight = res.tileHeight,
-                TileWidth = res.tileWidth
-            };
+                var res = JsonConvert.DeserializeObject<InternalResponse>(await resp.Content.ReadAsStringAsync());
+                var t = DateTime.Now.AddSeconds(res.expiry);
+                return new ResponseClass()
+                {
+                    Expiry = t,
+                    ImageFormat = res.imageFormat,
+                    Session = res.session,
+                    TileHeight = res.tileHeight,
+                    TileWidth = res.tileWidth
+                };
+            }
         }
 
         public static Uri GetMapUri(string SessionToken)

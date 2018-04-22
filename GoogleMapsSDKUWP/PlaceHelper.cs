@@ -411,8 +411,10 @@ namespace GMapsUWP.Place
             try
             {
                 var http = Initializer.httpclient;
-                var r = await http.PostAsync(new Uri($"https://maps.googleapis.com/maps/api/place/add/json?key={Initializer.GoogleMapAPIKey}", UriKind.RelativeOrAbsolute), new HttpStringContent(JsonConvert.SerializeObject(PlaceInfo)));
-                return JsonConvert.DeserializeObject<Response>((await r.Content.ReadAsStringAsync()));
+                using (var r = await http.PostAsync(new Uri($"https://maps.googleapis.com/maps/api/place/add/json?key={Initializer.GoogleMapAPIKey}", UriKind.RelativeOrAbsolute), new HttpStringContent(JsonConvert.SerializeObject(PlaceInfo))))
+                {
+                    return JsonConvert.DeserializeObject<Response>((await r.Content.ReadAsStringAsync()));
+                }
             }
             catch (Exception)
             {
@@ -475,8 +477,10 @@ namespace GMapsUWP.Place
             try
             {
                 var http = Initializer.httpclient;
-                var r = await http.PostAsync(new Uri($"https://maps.googleapis.com/maps/api/place/delete/json?key={Initializer.GoogleMapAPIKey}", UriKind.RelativeOrAbsolute), new HttpStringContent(JsonConvert.SerializeObject(PlaceInfo)));
-                return JsonConvert.DeserializeObject<Response>((await r.Content.ReadAsStringAsync()));
+                using (var r = await http.PostAsync(new Uri($"https://maps.googleapis.com/maps/api/place/delete/json?key={Initializer.GoogleMapAPIKey}", UriKind.RelativeOrAbsolute), new HttpStringContent(JsonConvert.SerializeObject(PlaceInfo))))
+                {
+                    return JsonConvert.DeserializeObject<Response>((await r.Content.ReadAsStringAsync()));
+                }
             }
             catch (Exception)
             {
