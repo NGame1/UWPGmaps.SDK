@@ -68,7 +68,8 @@ namespace GMapsUWP.Directions
         public static MapPolyline GetDirectionAsRoute(Rootobject FuncResp, Color ResultColor)
         {
             var loclist = new List<BasicGeoposition>();
-            var points = DecodePolylinePoints(FuncResp.Routes.FirstOrDefault().OverviewPolyline.Points);
+            //var points = DecodePolylinePoints(FuncResp.Routes.FirstOrDefault().OverviewPolyline.Points);
+            var points = DecodePolylinePoints(FuncResp.Routes.FirstOrDefault().Legs.FirstOrDefault().Steps.ToList());
             foreach (var item in points)
             {
                 loclist.Add(item);
@@ -102,7 +103,8 @@ namespace GMapsUWP.Directions
         public static MapPolyline GetDirectionAsRoute(Route Route, Color ResultColor)
         {
             var loclist = new List<BasicGeoposition>();
-            var points = DecodePolylinePoints(Route.OverviewPolyline.Points);
+            //var points = DecodePolylinePoints(Route.OverviewPolyline.Points);
+            var points = DecodePolylinePoints(Route.Legs.FirstOrDefault().Steps.ToList());
             foreach (var item in points)
             {
                 loclist.Add(item);
@@ -204,6 +206,70 @@ namespace GMapsUWP.Directions
             catch
             {
                 // logo it
+            }
+            return poly;
+        }
+        public static List<BasicGeoposition> DecodePolylinePoints(List<Step> encodedPoints)
+        {
+            if (encodedPoints == null) return null;
+            List<BasicGeoposition> poly = new List<BasicGeoposition>();
+            foreach (var encodedPoint in encodedPoints)
+            {
+                if (encodedPoint != null)
+                {
+                    char[] polylinechars = encodedPoint.Polyline.Points.ToCharArray();
+                    int index = 0;
+
+                    int currentLat = 0;
+                    int currentLng = 0;
+                    int next5bits;
+                    int sum;
+                    int shifter;
+
+                    try
+                    {
+                        while (index < polylinechars.Length)
+                        {
+                            // calculate next latitude
+                            sum = 0;
+                            shifter = 0;
+                            do
+                            {
+                                next5bits = (int)polylinechars[index++] - 63;
+                                sum |= (next5bits & 31) << shifter;
+                                shifter += 5;
+                            } while (next5bits >= 32 && index < polylinechars.Length);
+
+                            if (index >= polylinechars.Length)
+                                break;
+
+                            currentLat += (sum & 1) == 1 ? ~(sum >> 1) : (sum >> 1);
+
+                            //calculate next longitude
+                            sum = 0;
+                            shifter = 0;
+                            do
+                            {
+                                next5bits = (int)polylinechars[index++] - 63;
+                                sum |= (next5bits & 31) << shifter;
+                                shifter += 5;
+                            } while (next5bits >= 32 && index < polylinechars.Length);
+
+                            if (index >= polylinechars.Length && next5bits >= 32)
+                                break;
+
+                            currentLng += (sum & 1) == 1 ? ~(sum >> 1) : (sum >> 1);
+                            BasicGeoposition p = new BasicGeoposition();
+                            p.Latitude = Convert.ToDouble(currentLat) / 100000.0;
+                            p.Longitude = Convert.ToDouble(currentLng) / 100000.0;
+                            poly.Add(p);
+                        }
+                    }
+                    catch
+                    {
+                        // logo it
+                    }
+                }
             }
             return poly;
         }
