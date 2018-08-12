@@ -10,12 +10,13 @@ using Windows.Devices.Geolocation;
 namespace GMapsUWP.GeoCoding
 {
     public class ReverseGeoCode
-    {/// <summary>
-     /// Get Location Latitude and Longitude from Address
-     /// </summary>
-     /// <param name="Address">The address for reverse geocoding</param>
-     /// <returns>returns a geopoint contains address Latitude and Longitude</returns>
-        public static async Task<Geopoint> GetLocation(string Address)
+    {
+        /// <summary>
+        /// Get Location Latitude and Longitude from Address
+        /// </summary>
+        /// <param name="Address">The address for reverse geocoding</param>
+        /// <returns>returns a geopoint contains address Latitude and Longitude</returns>
+        public static async Task<Geopoint> GetLocationGeopoint(string Address)
         {
             try
             {
@@ -27,6 +28,17 @@ namespace GMapsUWP.GeoCoding
             catch { return null; }
         }
 
+        public static async Task<Result> GetLocation(string Address)
+        {
+            try
+            {
+                var http = Initializer.httpclient;
+                var r = await http.GetStringAsync(new Uri($"http://maps.googleapis.com/maps/api/geocode/json?address={Address}&sensor=false", UriKind.RelativeOrAbsolute));
+                return JsonConvert.DeserializeObject<Rootobject>(r).Results.FirstOrDefault();
+                //return new Geopoint(new BasicGeoposition() { Latitude = res.Latitude, Longitude = res.Longitude });
+            }
+            catch { return null; }
+        }
 
         public class Rootobject
         {
