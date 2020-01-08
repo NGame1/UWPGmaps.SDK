@@ -50,7 +50,7 @@ namespace GMapsUWP.Directions
                             requestUrl += $"{WayPoints[i].Latitude},{WayPoints[i].Longitude}";
                     }
                 }
-                requestUrl += $"&key={AppCore.GoogleMapAPIKey}";
+                requestUrl += $"&key={Initializer.GoogleMapAPIKey}";
                 var http = Initializer.httpclient;
                 var s = await http.GetStringAsync(new Uri(requestUrl, UriKind.RelativeOrAbsolute));
                 return JsonConvert.DeserializeObject<Rootobject>(s);
