@@ -38,7 +38,7 @@ namespace GMapsUWP.Directions
                     throw new ArgumentOutOfRangeException("Waypoints are not available in transit mode.");
                 }
                 var m = Mode.ToString();
-                var requestUrl = String.Format("http://maps.google.com/maps/api/directions/json?origin=" + Origin.Latitude + "," + Origin.Longitude + "&destination=" + Destination.Latitude + "," + Destination.Longitude + "&units=metric&mode=" + Mode + "&language=" + Initializer.GoogleMapRequestsLanguage);
+                var requestUrl = String.Format("https://maps.google.com/maps/api/directions/json?origin=" + Origin.Latitude + "," + Origin.Longitude + "&destination=" + Destination.Latitude + "," + Destination.Longitude + "&units=metric&mode=" + Mode + "&language=" + Initializer.GoogleMapRequestsLanguage);
                 if (WayPoints != null && WayPoints.Count != 0)
                 {
                     requestUrl += "&waypoints=";
@@ -50,7 +50,7 @@ namespace GMapsUWP.Directions
                             requestUrl += $"{WayPoints[i].Latitude},{WayPoints[i].Longitude}";
                     }
                 }
-                //requestUrl += $"&key={AppCore.GoogleMapAPIKey}";
+                requestUrl += $"&key={AppCore.GoogleMapAPIKey}";
                 var http = Initializer.httpclient;
                 var s = await http.GetStringAsync(new Uri(requestUrl, UriKind.RelativeOrAbsolute));
                 return JsonConvert.DeserializeObject<Rootobject>(s);
